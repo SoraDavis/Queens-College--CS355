@@ -1,0 +1,26 @@
+table
+{
+   border-collapse: collapse;
+}
+
+table, th, td
+{
+   border: 1px solid gray;
+}
+
+th, td
+{
+   padding: 15px;
+   text-align: left;
+}
+
+tr:hover
+{
+   background-color: light green;
+}
+
+th
+{
+   background-color: green;
+   color: white;
+}
