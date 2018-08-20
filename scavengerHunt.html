@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <title>Scavenger Hunt!</title>
+   <meta charset = "UTF-8">
+   <script src = "http://code.jquery.com/jquery-3.3.1.min.js"></script>
+   <link rel = "stylesheet" type = "text/css" href = "scavengerHunt-style.css">
+</head>
+
+<body>
+   <h2>  Scavenger Hunt!</h2>
+
+   <div id = "weather"></div>
+   <button id = "refreshWeather">Refresh Weather</button>
+
+   <div id = "stock"></div>
+   <button id = "refreshStock">Refresh Apple Stock</button>
+
+   <div id = "trafficNYC"></div>
+   <button id = "refreshTraffic">Refresh Traffic</button>
+
+   <div id = "newsHeadlines"></div>
+   <button id = "refreshNews">Refresh Business Headlines</button>
+
+   <div id = "USPopulation"></div>
+   <button id = "refreshPopulation">Refresh US Population</button>
+
+
+ <script>
+
+ 
+ var time = (new Date()).toUTCString();
+
+  $(document).ready(function(){
+
+
+        $("#refreshWeather").click(function(){
+        $.ajax({
+           
+                url:"http://api.openweathermap.org/data/2.5/weather?q=Queens&units=imperial&APPID=c276e620bf5d1b60bdaefc10e0631f2f",
+                type:"GET",
+                dataType:"jsonp",
+                success: function(data){
+                   document.getElementById("weather").innerHTML = "<span>Current Temperature: </span>" +data.main.temp +" degrees<br><br><a target=_blank href = 'http://api.openweathermap.org/data/2.5/weather?q=Queens&units=imperial&APPID=c276e620bf5d1b60bdaefc10e0631f2f'>http://api.openweathermap.org/data/2.5/weather?q=Queens...</a><br><br>" +"<section> Time Accessed: " +time +"</section>";     
+                
+           }
+         });   
+       });
+
+        $("#refreshStock").click(function(){
+         
+            $.ajax({
+           
+                url: "https://api.iextrading.com/1.0/stock/aapl/delayed-quote",
+                type:"GET",
+                dataType:"jsonp",
+                success: function(data){
+                   document.getElementById("stock").innerHTML = "<span>Current Apple Stock Price: </span>" +data.delayedPrice +"<br><br><a target=_blank href = 'https://api.iextrading.com/1.0/stock/aapl/delayed-quote'>https://api.iextrading.com/1.0/stock/aapl/delayed-quote</a><br><br>" +"<section> Time Accessed: " +time +"</section>"; 
+                
+              }
+           });   
+        }); 
+    
+
+
+        $("#refreshTraffic").click(function(){
+         
+            $.ajax({
+           
+                url: "http://dev.virtualearth.net/REST/v1/Traffic/Incidents/40.706495,-73.983961,40.876280,-73.911483?type=1,7,9&key=ArOTiYRaUKWrZfWJxpRd2NgQX_P_LbFJnCdt78iV9anzGnijvrWVtYJYLFL0YBbM",
+                type:"GET",
+                dataType:"json",
+                success: function(data){
+                  document.getElementById("trafficNYC").innerHTML = "<span>Traffic Info NYC: </span>" +data.resourceSets[0].resources[0].description +"<br><br><a target=_blank href = 'http://dev.virtualearth.net/REST/v1/Traffic/Incidents/40.706495,-73.983961,40.876280,-73.911483?type=1,7,9&key=ArOTiYRaUKWrZfWJxpRd2NgQX_P_LbFJnCdt78iV9anzGnijvrWVtYJYLFL0YBbM'>http://dev.virtualearth.net/REST/v1/Traffic...</a><br><br>" +"<section> Time Accessed: " +time +"</section>";
+                          
+              }
+           });   
+        }); 
+    
+
+
+        $("#refreshNews").click(function(){
+             
+            $.ajax({
+           
+                url: "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=f83d97cfde594c4292c6cdc29df70132",
+                type:"GET",  
+                dataType:"json",
+                success: function(data){
+                    document.getElementById("newsHeadlines").innerHTML = "<span>Top Business News Headlines: </span>" +data.articles[0].title +"; " +data.articles[1].title + "; " +data.articles[2].title +"<br><br><a target=_blank href = 'https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=f83d97cfde594c4292c6cdc29df70132'>https://newsapi.org/v2/top-headlines?country=us&category=business</a><br><br>" +"<section> Time Accessed: " +time +"</section>"; 
+                }
+            });   
+        }); 
+   });
+
+
+      $("#refreshPopulation").click(function(){
+             
+            $.ajax({
+           
+                url: "http://api.population.io:80/1.0/population/United%20States/today-and-tomorrow/",
+                type:"GET",
+                dataType:"json",
+                success: function(data){
+                   document.getElementById("USPopulation").innerHTML = "<span>Today's US Population: </span>" +data.total_population[0].population +"<br><br><a target=_blank href = 'http://api.population.io:80/1.0/population/United%20States/today-and-tomorrow/'>http://api.population.io:80/1.0/population...</a><br><br>" +"<section> Time Accessed: " +time +"</section>"; 
+             }
+          });  
+       });
+       
+     </script>
+     
+</body>
+</html>
