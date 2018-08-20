@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html>
+ <head>
+   <meta charset = "UTF-8">
+   <title>URL Parser</title>
+ </head>
+
+<body>
+ <h2>URL Parser</h2>
+
+   <label>Enter a URL: <input type = "text" id = "url" name = "url"></label>
+   <button onclick = "getURL()">Submit URL</button>
+
+
+    <script>
+                
+        var url;
+        var piece;
+        var theHTML = "<html><head><meta charset = 'UTF-8'><link rel = 'stylesheet' type = 'text/css' href = 'parseURL-style.css'><title>URL Parser</title></head><body>";
+        var theTable = "<table><tr id = row1><th>Segment Title</th><th>Segment</th><th>Additional Info</th><th>Source</th> </tr>";
+
+        function getURL()
+       {
+          url = document.getElementById("url").value;
+
+          addRow();
+          addDataToTable("Protocol");
+          
+          var cut = splitURL(url, "://");
+          if (cut.length <= 1)
+          {
+            protocol = "http";
+            cut.unshift("http://");
+            url = cut.toString();
+            addDataToTable(protocol);
+            addDataToTable("HyperText Transfer Protocol");
+            addDataToTable("Default");
+            closeRow();
+          }
+          else
+          {
+            var protocol = cut[0];
+            addDataToTable(protocol);
+            var info = selectInfo(protocol); //to obtain the Additional Info column info for the protocol
+            addDataToTable(info);
+            addDataToTable("Provided");
+            closeRow();
+           }
+           
+            addRow();
+            addDataToTable("Full Address");
+            var removed = cut.shift(0); //removes the protocol part
+            var url2 = cut.toString();
+            cut = splitURL(url2, "/");
+        
+           var tempArray = cut.shift(0); //gives us just the domain section
+           addDataToTable(tempArray);
+           addDataToTable("  ");
+           addDataToTable("Provided");
+           closeRow();
+           tempArray = splitURL(tempArray, ".");
+
+           if(tempArray.length > 1)
+           {
+              var i;
+              for(i = tempArray.length-1; i >= 0; i--)
+                {
+                  if(i === tempArray.length-1)
+                  {
+                     addRow();
+                     addDataToTable("Top-Level Domain");
+                  }
+                  else if(i === tempArray.length-2)
+                  {
+                     addRow();
+                     addDataToTable("Second-Level Domain");
+                  }
+                   else
+                  {
+                     addRow();
+                     addDataToTable("Sub-Domain");
+                  }
+
+                     addDataToTable(tempArray[i]);
+                     addDataToTable("   ");
+                     addDataToTable("Provided");
+                     closeRow();
+                  }
+            }
+            else
+           {
+             window.confirm("You have not provided enough information; this URL contains no domain. Please try again.");
+           }
+ 
+           addRow();
+           addDataToTable("Port");
+           var newCut = splitURL(url2, ":");
+        
+           var port;
+           if(newCut.length == 1)
+           {
+             port = "80";
+             addDataToTable(port);
+             addDataToTable("   ");
+             addDataToTable("Default");
+             closeRow();
+             //default value
+           }
+           else
+           {
+             var temp = newCut[1];
+             newCut = splitURL(temp, "/");
+             port = newCut[0];
+             addDataToTable(port);
+             addDataToTable("   ");
+             addDataToTable("Provided");
+             closeRow();
+           }
+
+          //Get directories(path):
+          var cutString = cut.toString();
+          if (cutString.includes("?"))
+           {
+              cut = splitURL(cutString, "?");
+              cut.pop();
+           }
+          if(cut[cut.length-1] != undefined)
+          { 
+            if(cut[cut.length-1].includes("."))
+            {
+              var page = cut.pop();
+            }
+          }
+
+          var j;
+          for(j = 0; j < cut.length; j++)
+          {
+             addRow();
+             addDataToTable("Directory");
+             addDataToTable(cut[j]);
+             addDataToTable("   ");
+             addDataToTable("Provided");
+             closeRow();
+          }
+          
+          //Get page:
+          addRow();
+          addDataToTable("Page");
+
+          if((page == undefined) || (page.includes("?")))
+          { 
+            page = "index.html";
+            addDataToTable(page);
+            addDataToTable("   ");
+            addDataToTable("Default");
+            closeRow();
+            //default value     
+          }
+          else
+          {
+            addDataToTable(page);
+            addDataToTable("   ");
+            addDataToTable("Provided");
+            closeRow();
+          }
+          
+          //Get parameters:
+          var param;
+          newCut = splitURL(url2, "?")
+          var param;
+          if(newCut.length > 1)
+          {
+            param = splitURL(newCut[1],"&");
+          }
+          if (param != undefined)
+          {
+            param = splitURL(param.toString(), "=");
+            param = splitURL(param.toString(), ",");
+            
+            var k = 0;
+            for(i = 0; i < param.length; i++)
+            {
+              if(i%2 == 0)
+              {
+               k++;
+               addRow();
+               addDataToTable("Parameter #" + k);
+               addDataToTable("name = " +param[i]);
+              }
+              else
+              {
+                addDataToTable("value = " +param[i]);
+                addDataToTable("Provided");
+                closeRow();
+              }
+            }    
+          }
+
+          theTable += "</table>";
+          document.writeln("<a href = " +url+" target = _blank>" +url+ "</a>");
+          theHTML += theTable;
+          theHTML += "</body></html>";
+          document.writeln(theHTML);
+
+         }
+
+        function splitURL(info, delim)
+        {
+          piece = info.split(delim);
+          return piece;  
+        }
+
+        function addRow()
+        {
+          theTable += "<tr>";
+        }
+        function closeRow()
+        {
+          theTable += "</tr>";
+        }
+        function addDataToTable(data)
+        {
+          theTable += "<td>" + data + "</td>";
+        }
+        function selectInfo(proto)
+        {
+          if(proto === "http")
+          {
+            return "HyperText Transfer Protocol";
+          }
+         
+          if(proto === "https")
+          {
+            return "HyperText Transfer Protocol Secure";
+          }
+         
+          if(proto === "ftp")
+          {
+            return "File Transfer Protocol";
+          }
+          if(proto === "mailto")
+          {
+            return "Mail Transfer Protocol (Email)";
+          }
+          else
+          {
+            return "  ";
+          }
+        }
+        
+
+     </script>
+  
+</body>
+</html>
+     
+         
