@@ -1,0 +1,67 @@
+
+ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 200 px;
+        background-color: black;
+        position: fixed; /* Makes it stick to the top of the pg*/
+        top: 0;
+        width: 100%;
+        overflow: hidden; /* 'Auto' for a vertical menu to enable scrolling if too much content*/
+}
+
+li {
+        border-right: 1px solid blue;
+        position: sticky; /* Toggles between relative and fixed, depending on scroll */
+        top: 0;
+        font-size: 20pt;
+        font-family: cursive;
+        float: left;
+}
+
+a {
+        display: block;
+        padding: 8px;
+}
+
+li a {
+        display: block; /*displays in a box, makes whole box clickable*/
+        color: pink;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: underline overline wavy blue;
+}
+
+/*Change link color on hover*/
+li a:hover{
+        background-color: cyan;
+        color: green;
+}
+
+img {
+
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+
+}
+
+footer {
+
+        display: block;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: black;
+        color: white;
+        text-align: center;
+
+}
+
+/*Lets user know which page he's currently on (color)*/
+.active {
+        background color: gray;
+}
